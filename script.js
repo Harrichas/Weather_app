@@ -37,5 +37,27 @@ $(document).ready(function () {
         });
     });
 
-    
-})
+    function getForcast(input) {
+        var fiveDayURL = `http://api.openweathermap.org/data/2.5/forecast?q=${input}&units=imperial&appid=${key}`
+
+        $.ajax({
+            url: fiveDayURL,
+            type: 'GET',    
+        }).then(function (response) {
+            $('#forcast')
+                .html('<h4 class="mt-3">5-day Forcast:</h4>')
+                .append('<div class="row">');
+            console.log(response);
+            for(var i = 0; i < response.list.length; i++) {
+                var hour = response.list[i];
+                if (hour.dt_text.indexOf('00:00:00') !=0) {
+                    var date = new Date(hour.dt_text).toLocaleDateString();
+                    hour.main.temp;
+                    response.main.humidity;
+                    response.wind.speed;
+
+                }
+            }
+        })
+    }
+});
