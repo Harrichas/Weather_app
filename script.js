@@ -54,10 +54,23 @@ $(document).ready(function () {
                 var hour = response.list[i];
                 if (hour.dt_txt.includes('00:00:00')) {
                     var date = new Date(hour.dt_txt).toLocaleDateString();
+                    date = $('#date')
                     hour.main.temp;
                     hour.main.humidity;
+                
 
-                $('#forcast').append('<div class="col-2">').append('<p>')
+                    $('#forcast').append(
+                        $('<p>').text(
+                            ' (' + new Date().toLocaleDateString() + ')'
+                        ).append(
+                            `<img src="http://openweathermap.org/img/wn/${hour.weather[0].icon}.png">`
+                        ).append(
+                        $('<p>')
+                            .text(`Temp: ${hour.main.temp}` + '° F'),
+                         
+                        $('<p>')
+                            .text(`Humidity: ${hour.main.humidity}` + '%')                        
+                        ))
                     
 
                 }
