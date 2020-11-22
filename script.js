@@ -26,13 +26,16 @@ $(document).ready(function () {
                 `<img src="http://openweathermap.org/img/wn/${response.weather[0].icon}.png">`
             ).append(
             $('<p>')
-                .text(`Temp: ${response.main.temp}` + '° F'),
+                .text(`Temp: ${response.main.temp}` + '° F')
+                .addClass('currentWeather'),
              
             $('<p>')
-                .text(`Humidity: ${response.main.humidity}` + '%'),
+                .text(`Humidity: ${response.main.humidity}` + '%')
+                .addClass('currentWeather'),
             
             $('<p>')
-                .text(`Windspeed: ${response.wind.speed}` + 'mph')))
+                .text(`Windspeed: ${response.wind.speed}` + 'mph')
+                .addClass('currentWeather')))
         
             getForcast(userInput);
             getUVI(response.coord.lat, response.coord.lon);
@@ -54,14 +57,12 @@ $(document).ready(function () {
                 var hour = response.list[i];
                 if (hour.dt_txt.includes('00:00:00')) {
                     var date = new Date(hour.dt_txt).toLocaleDateString();
-                    date = $('#date')
                     hour.main.temp;
                     hour.main.humidity;
                 
 
                     $('#forcast').append(
-                        $('<p>').text(
-                            ' (' + new Date().toLocaleDateString() + ')'
+                        $('<p>').text(date                            
                         ).append(
                             `<img src="http://openweathermap.org/img/wn/${hour.weather[0].icon}.png">`
                         ).append(
@@ -85,7 +86,18 @@ $(document).ready(function () {
             url: uviURL,
             type: 'GET',
         }).then(function (response) {
-            $('#current').append($('<p>').text(response.value));
+            var UVI = response.value;
+            $('#current').append($('<p>')
+                .text(`UVI: ${UVI}`)
+                .addClass('currentWeather'));
+            if ($(UVI) <= 2.99) {
+				$('currentWeather').css('background-color', 'green');
+			}
+			if (3.0 < $(UVI) <= 6.99) {
+				$('currentWeather').css('background-color', 'yellow');
+			} else {
+				$('currentWeather').css('background-color', 'red');
+			}
         })
     }
 });
