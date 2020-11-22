@@ -5,7 +5,8 @@
 var key = '70f2da62566a60532110329b3baf00bc'
 
 $(document).ready(function () {
-    $('#search-btn').click(function() {
+    $('#search-btn').click(function(event) {
+        event.preventDefault();
         var userInput = $('#city').val();
         var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${userInput}&units=imperial&appid=${key}`
 
@@ -18,22 +19,23 @@ $(document).ready(function () {
             response.main.temp;
             response.main.humidity;
             response.wind.speed;
-            $('#cityName').text(
+            $('#current').append(
+            $('<p>').text(
                 response.name + ' (' + new Date().toLocaleDateString() + ')'
-            );
-            $('#cityName').append(
+            ).append(
                 `<img src="http://openweathermap.org/img/wn/${response.weather[0].icon}.png">`
-            );
-            $('#currentTemp')
-                .text(`Temp: ${response.main.temp}` + '° F')
-                .addClass('currentWeather');
-            $('#humidity')
-                .text(`Humidity: ${response.main.humidity}` + '%')
-                .addClass('currentWeather');
-            $('#windSpeed')
-                .text(`Windspeed: ${response.wind.speed}` + 'mph')
-                .addClass('currentWeather');
+            ).append(
+            $('<p>')
+                .text(`Temp: ${response.main.temp}` + '° F'),
+             
+            $('<p>')
+                .text(`Humidity: ${response.main.humidity}` + '%'),
+            
+            $('<p>')
+                .text(`Windspeed: ${response.wind.speed}` + 'mph')))
+        
             getForcast(userInput);
+            getUVI(response.coord.lat, response.coord.lon);
         });
     });
 
@@ -50,14 +52,27 @@ $(document).ready(function () {
             console.log(response);
             for(var i = 0; i < response.list.length; i++) {
                 var hour = response.list[i];
-                if (hour.dt_text.indexOf('00:00:00') !=0) {
-                    var date = new Date(hour.dt_text).toLocaleDateString();
+                if (hour.dt_txt.includes('00:00:00')) {
+                    var date = new Date(hour.dt_txt).toLocaleDateString();
                     hour.main.temp;
-                    response.main.humidity;
-                    response.wind.speed;
+                    hour.main.humidity;
+
+                $('#forcast').append('<div class="col-2">').append('<p>')
+                    
 
                 }
             }
+        })
+    }
+
+    function getUVI(lat,lon) {
+        var uviURL = `http://api.openweathermap.org/data/2.5/uvi?appid=${key}&lat=${lat}&lon=${lon}`
+
+        $.ajax({
+            url: uviURL,
+            type: 'GET',
+        }).then(function (response) {
+            $('#current').append($('<p>').text(response.value));
         })
     }
 });
