@@ -20,22 +20,21 @@ $(document).ready(function () {
             response.main.humidity;
             response.wind.speed;
             $('#current').append(
-            $('<p>').text(
+            $('<p id="weatherData">').text(
                 response.name + ' (' + new Date().toLocaleDateString() + ')'
             ).append(
                 `<img src="http://openweathermap.org/img/wn/${response.weather[0].icon}.png">`
             ).append(
             $('<p>')
-                .text(`Temp: ${response.main.temp}` + '° F')
-                .addClass('currentWeather'),
+                .text(`Temp: ${response.main.temp}` + '° F'),
+                
              
             $('<p>')
-                .text(`Humidity: ${response.main.humidity}` + '%')
-                .addClass('currentWeather'),
+                .text(`Humidity: ${response.main.humidity}` + '%'),
+                
             
             $('<p>')
-                .text(`Windspeed: ${response.wind.speed}` + 'mph')
-                .addClass('currentWeather')))
+                .text(`Windspeed: ${response.wind.speed}` + 'mph')))
         
             getForcast(userInput);
             getUVI(response.coord.lat, response.coord.lon);
@@ -87,16 +86,17 @@ $(document).ready(function () {
             type: 'GET',
         }).then(function (response) {
             var UVI = response.value;
-            $('#current').append($('<p>')
+            console.log(UVI)
+            $('#weatherData').append($('<p>')
                 .text(`UVI: ${UVI}`)
                 .addClass('currentWeather'));
             if ($(UVI) <= 2.99) {
-				$('currentWeather').css('background-color', 'green');
+				$('.currentWeather').css('background-color', 'green');
 			}
 			if (3.0 < $(UVI) <= 6.99) {
-				$('currentWeather').css('background-color', 'yellow');
+				$('.currentWeather').css('background-color', 'yellow');
 			} else {
-				$('currentWeather').css('background-color', 'red');
+				$('.currentWeather').css('background-color', 'red');
 			}
         })
     }

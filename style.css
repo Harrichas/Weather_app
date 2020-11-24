@@ -48,3 +48,7 @@ form {
     color: whitesmoke;
     background-color: rgb(255, 89, 89);
 }
+
+.currentWeather {
+    color: black;
+}
