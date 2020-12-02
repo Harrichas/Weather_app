@@ -23,7 +23,7 @@ $(document).ready(function () {
             $('<p id="weatherData">').text(
                 response.name + ' (' + new Date().toLocaleDateString() + ')'
             ).append(
-                `<img src="http://openweathermap.org/img/wn/${response.weather[0].icon}.png">`
+                `<img src="https://openweathermap.org/img/wn/${response.weather[0].icon}.png">`
             ).append(
             $('<p>')
                 .text(`Temp: ${response.main.temp}` + '° F'),
@@ -42,7 +42,7 @@ $(document).ready(function () {
     });
 
     function getForcast(input) {
-        var fiveDayURL = `http://api.openweathermap.org/data/2.5/forecast?q=${input}&units=imperial&appid=${key}`
+        var fiveDayURL = `https://api.openweathermap.org/data/2.5/forecast?q=${input}&units=imperial&appid=${key}`
 
         $.ajax({
             url: fiveDayURL,
@@ -63,7 +63,7 @@ $(document).ready(function () {
                     $('#forcast').append(
                         $('<p>').text(date                            
                         ).append(
-                            `<img src="http://openweathermap.org/img/wn/${hour.weather[0].icon}.png">`
+                            `<img src="https://openweathermap.org/img/wn/${hour.weather[0].icon}.png">`
                         ).append(
                         $('<p>')
                             .text(`Temp: ${hour.main.temp}` + '° F'),
@@ -79,7 +79,7 @@ $(document).ready(function () {
     }
 
     function getUVI(lat,lon) {
-        var uviURL = `http://api.openweathermap.org/data/2.5/uvi?appid=${key}&lat=${lat}&lon=${lon}`
+        var uviURL = `https://api.openweathermap.org/data/2.5/uvi?appid=${key}&lat=${lat}&lon=${lon}`
 
         $.ajax({
             url: uviURL,
