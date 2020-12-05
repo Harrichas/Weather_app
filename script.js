@@ -5,10 +5,25 @@
 var key = '70f2da62566a60532110329b3baf00bc'
 
 $(document).ready(function () {
-    $('#search-btn').click(function(event) {
+    $('#search-btn').click(search);
+
+    displayCityList();
+
+    function search (event, cityName) {
+        if(event) {
         event.preventDefault();
-        var userInput = $('#city').val();
+        }
+        console.log(cityName);
+        var userInput;
+        if (cityName) {
+            userInput = cityName;
+        } else {
+            userInput = $('#city').val();
+        }
+
         var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${userInput}&units=imperial&appid=${key}`
+
+        $('#current').html('');
 
         $.ajax({
             url: queryURL,
@@ -35,11 +50,13 @@ $(document).ready(function () {
             
             $('<p>')
                 .text(`Windspeed: ${response.wind.speed}` + 'mph')))
-        
+                
+            addToCityList(userInput);
             getForcast(userInput);
             getUVI(response.coord.lat, response.coord.lon);
         });
-    });
+
+    }
 
     function getForcast(input) {
         var fiveDayURL = `https://api.openweathermap.org/data/2.5/forecast?q=${input}&units=imperial&appid=${key}`
@@ -100,4 +117,40 @@ $(document).ready(function () {
 			}
         })
     }
+
+    function addToCityList (cityName) {
+        var cityList = window.localStorage.getItem('cityList') || [];
+        cityList = typeof cityList === 'string' ? JSON.parse(cityList) : cityList;
+
+        cityList.push(cityName);
+
+        window.localStorage.setItem('cityList', JSON.stringify(cityList));
+        displayCityList();
+    }
+
+    function displayCityList() {
+        var cityList = window.localStorage.getItem('cityList') || [];
+        var cityListEl = $("#cityList")
+
+        cityListEl.html('');
+
+        cityList = typeof cityList === 'string' ? JSON.parse(cityList) : cityList;
+
+        for (var i = 0; i < cityList.length; i++) {
+            var li = $('<li>')
+
+            li.text(cityList[i]);
+            li.click(onCityListClick);
+
+            cityListEl.append(li);
+        }
+    };
+
+    function onCityListClick (event) {
+        var cityName = event.target.textContent;
+        console.log(cityName);
+        search(null, cityName);
+
+    }
+
 });
